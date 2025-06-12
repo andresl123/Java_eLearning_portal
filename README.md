@@ -16,41 +16,8 @@ PRs: Open a pull request for every change
 
 Use descriptive, lowercase names with slashes to group by type:
 
-Type
+![image](https://github.com/user-attachments/assets/07125430-de06-4c35-8c26-e98294426db4)
 
-Format
-
-Example
-
-Feature
-
-feature/<short-description>
-
-feature/login-page
-
-Bugfix
-
-bugfix/<short-description>
-
-bugfix/fix-login-error
-
-Hotfix
-
-hotfix/<short-description>
-
-hotfix/fix-api-crash
-
-Chore
-
-chore/<short-description>
-
-chore/update-packages
-
-Release
-
-release/<version>
-
-release/v1.2.0
 
 🔸 Tip: Keep it short and clear. Use hyphens instead of spaces or underscores.
 
