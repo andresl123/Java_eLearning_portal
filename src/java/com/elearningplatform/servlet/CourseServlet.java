@@ -1,6 +1,5 @@
 package com.elearningplatform.servlet;
 
-import com.elearningplatform.dao.CourseDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
