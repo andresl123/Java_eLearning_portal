@@ -1,7 +1,20 @@
-/* 
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/JavaScript.js to edit this template
- */
+window.addEventListener("DOMContentLoaded", function () {
+    const params = new URLSearchParams(window.location.search);
+    toastr.options = {
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "timeOut": "3000"
+    };
 
-/* Placeholder: Add JavaScript for dynamic behavior (e.g., form validation, AJAX calls).
-   Connects to: login.jsp, register.jsp, studentDashboard.jsp, tutorCourses.jsp, adminPanel.jsp, index.jsp for interactivity. */
+    const loginParam = params.get("login");
+    const userName = params.get("userName");
+
+    if (loginParam === "success") {
+        toastr.success("Login successful!", `🎉 Welcome ${userName || ""}!`);
+    } else if (loginParam === "fail") {
+        toastr.error("Invalid email or password", "Login Failed ❌");
+    } else if (loginParam === "error") {
+        toastr.error("An error occurred while logging in", "Server Error ❌");
+    }
+});
