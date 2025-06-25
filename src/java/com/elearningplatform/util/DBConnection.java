@@ -20,7 +20,11 @@ public class DBConnection {
     private ResultSet rs;
     
     private String loggedInUserName;
-            
+    
+    public Connection getConn() {
+        return conn;
+    }
+    
     // Connect to the database and create it, if it doesn't exist
     public void connect() throws SQLException {
     try {
@@ -231,6 +235,7 @@ public String getLoggedInUserName() {
     // COURSE METHODS
 
     public boolean insertCourse(int userId, int roleId, String name, int price, String status, boolean enroll, String desc, String category, int rating) throws SQLException {
+        connect();
         String query = "INSERT INTO Course (user_id, role_id, course_name, course_price, course_status, course_enroll, course_desc, course_category, course_rating) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         pstmt = conn.prepareStatement(query);
         pstmt.setInt(1, userId);
@@ -246,6 +251,7 @@ public String getLoggedInUserName() {
     }
 
     public ResultSet getCourseById(int courseId) throws SQLException {
+        connect();
         String query = "SELECT * FROM Course WHERE course_id = ?";
         pstmt = conn.prepareStatement(query);
         pstmt.setInt(1, courseId);
@@ -270,6 +276,9 @@ public String getLoggedInUserName() {
         pstmt.setInt(1, courseId);
         return pstmt.executeQuery();
     }
+    
+    
+    // INSERT MOCK INFORMATION
     
     public void insertMockUsers() throws SQLException {
     connect();

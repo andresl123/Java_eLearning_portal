@@ -49,6 +49,8 @@
     <a href="login_student.jsp">Go to Login Page</a>
     <br>
     <a href="adminPanel.jsp">Go to Admin Panel</a>
+    <br>
+    <a href="courseDetails.jsp">Go to Course Details</a>
     
 </body>
 
