@@ -45,7 +45,10 @@
 <body>
     <!-- Placeholder: Add landing page with links to login.jsp and register.jsp.
          Connects to: login.jsp and register.jsp for navigation, style.css for styling, script.js for interactivity. -->
+    <br>
     <a href="login_student.jsp">Go to Login Page</a>
+    <br>
+    <a href="adminPanel.jsp">Go to Admin Panel</a>
     
 </body>
 
