@@ -4,16 +4,26 @@
 <head>
     <title>Login - eLearning Platform</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+        <!-- Toastr CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+
+    <!-- jQuery (required by Toastr) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    
+    <script src="js/scripts.js"></script>
 </head>
 <body class="bg-light">
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-4">
             <h2 class="text-center mb-4">eLearning Login</h2>
-            <form action="login" method="post">
+            <form action="Login" method="post">
                 <div class="mb-3">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" name="username" class="form-control" required autofocus>
+                    <label for="userEmail" class="form-label">User Email</label>
+                    <input type="text" name="userEmail" class="form-control" required autofocus>
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
@@ -34,5 +44,6 @@
         </div>
     </div>
 </div>
+               
 </body>
 </html>
