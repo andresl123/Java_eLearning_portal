@@ -1,6 +1,9 @@
 package com.elearningplatform.util;
 
+import com.elearningplatform.model.User;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -9,15 +12,19 @@ public class DBConnection {
     private static final String DB_NAME = "elearning_db";
     private static final String DB_URL_WITHOUT_DB = "jdbc:mysql://localhost:3306/";
     private static final String DB_URL = "jdbc:mysql://localhost:3306/" + DB_NAME;
-    private static final String DB_USER = "root"; // Update for your MySQL connection
-    private static final String DB_PASSWORD = "1234"; // Update for your MySQL connection
+    private static final String DB_USER = "andre"; // Update for your MySQL connection
+    private static final String DB_PASSWORD = "MySQL123"; // Update for your MySQL connection
 
     private Connection conn;
     private PreparedStatement pstmt;
     private ResultSet rs;
     
     private String loggedInUserName;
-            
+    
+    public Connection getConn() {
+        return conn;
+    }
+    
     // Connect to the database and create it, if it doesn't exist
     public void connect() throws SQLException {
     try {
@@ -123,6 +130,7 @@ public class DBConnection {
     // USER METHODS
 
     public boolean insertUser(int roleId, String firstName, String lastName, String email, String password, String tutorDesc) throws SQLException {
+        connect();
         String query = "INSERT INTO User (role_id, user_name, user_last_name, user_email, user_password, tutor_desc) VALUES (?, ?, ?, ?, ?, ?)";
         pstmt = conn.prepareStatement(query);
         pstmt.setInt(1, roleId);
@@ -133,7 +141,49 @@ public class DBConnection {
         pstmt.setString(6, tutorDesc);
         return pstmt.executeUpdate() > 0;
     }
+    public boolean updateUser(int userId, int roleId, String firstName, String lastName, String email, String password, String tutorDesc) throws SQLException {
+        connect();
+        String query = "UPDATE User SET role_id = ?, user_name = ?, user_last_name = ?, user_email = ?, user_password = ?, tutor_desc = ? WHERE user_id = ?";
+        pstmt = conn.prepareStatement(query);
+        pstmt.setInt(1, roleId);
+        pstmt.setString(2, firstName);
+        pstmt.setString(3, lastName);
+        pstmt.setString(4, email);
+        pstmt.setString(5, password);
+        pstmt.setString(6, tutorDesc);
+        pstmt.setInt(7, userId);
+        return pstmt.executeUpdate() > 0;
+    }
+    
+    public boolean deleteUser(int userId) throws SQLException {
+        connect();
+        String query = "DELETE FROM User WHERE user_id = ?";
+        pstmt = conn.prepareStatement(query);
+        pstmt.setInt(1, userId);
+        return pstmt.executeUpdate() > 0;
+    }
+    
+    public List<User> getAllUsers() throws SQLException {
+        connect();
+        List<User> userList = new ArrayList<>();
+        String query = "SELECT * FROM User";
+        pstmt = conn.prepareStatement(query);
+        rs = pstmt.executeQuery();
 
+        while (rs.next()) {
+            User user = new User();
+            user.setUserId(rs.getInt("user_id"));
+            user.setRoleId(rs.getInt("role_id"));
+            user.setFirstName(rs.getString("user_name"));
+            user.setLastName(rs.getString("user_last_name"));
+            user.setEmail(rs.getString("user_email"));
+            user.setPassword(rs.getString("user_password"));
+            user.setTutorDesc(rs.getString("tutor_desc"));
+            userList.add(user);
+    }
+
+    return userList;
+    }
        
     public String getUserNameByEmail(String email) throws SQLException {
         String query = "SELECT user_name FROM User WHERE user_email = ?";
@@ -185,6 +235,7 @@ public String getLoggedInUserName() {
     // COURSE METHODS
 
     public boolean insertCourse(int userId, int roleId, String name, int price, String status, boolean enroll, String desc, String category, int rating) throws SQLException {
+        connect();
         String query = "INSERT INTO Course (user_id, role_id, course_name, course_price, course_status, course_enroll, course_desc, course_category, course_rating) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         pstmt = conn.prepareStatement(query);
         pstmt.setInt(1, userId);
@@ -200,6 +251,7 @@ public String getLoggedInUserName() {
     }
 
     public ResultSet getCourseById(int courseId) throws SQLException {
+        connect();
         String query = "SELECT * FROM Course WHERE course_id = ?";
         pstmt = conn.prepareStatement(query);
         pstmt.setInt(1, courseId);
@@ -224,6 +276,9 @@ public String getLoggedInUserName() {
         pstmt.setInt(1, courseId);
         return pstmt.executeQuery();
     }
+    
+    
+    // INSERT MOCK INFORMATION
     
     public void insertMockUsers() throws SQLException {
     connect();
