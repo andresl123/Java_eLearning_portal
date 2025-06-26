@@ -110,8 +110,6 @@
             </div>
         </div>
     </section>
-    
-</body>
 
     <!-- Footer with some legal stuff -->
     <footer class="bg-dark text-white text-center py-3 mt-5">

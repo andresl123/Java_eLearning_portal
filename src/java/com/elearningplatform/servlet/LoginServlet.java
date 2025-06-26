@@ -16,29 +16,34 @@ import java.util.logging.Logger;
 
 // Placeholder: Implement doPost to handle login form submission, validate user via UserDAO, and redirect.
 // Connects to: UserDAO for authentication, login.jsp for form input, studentDashboard.jsp/adminPanel.jsp for redirect.
-@WebServlet("/Login")
+@WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+
         String userEmail = request.getParameter("userEmail");
         String password = request.getParameter("password");
+
         try {
-            
             DBConnection db = new DBConnection();
             db.connect();
-            
+
             boolean loginSuccess = db.verifyUserLogin(userEmail, password);
 
             if (loginSuccess) {
-                response.sendRedirect("index.jsp?login=success");
+                String username = db.getLoggedInUserName();
+                if ("Admin".equals(username)) {  // case-sensitive check
+                    response.sendRedirect("adminPanel.jsp");
+                } else {
+                    response.sendRedirect("index.jsp?login=success");
+                }
             } else {
-                response.sendRedirect("login_student.jsp?login=fail");
+                response.sendRedirect("login.jsp?login=fail");
             }
-
-            
-        } catch (SQLException ex) {
-            System.out.print(ex);
-            response.sendRedirect("login_student.jsp?login=error");
-            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.sendRedirect("login.jsp?login=error");
         }
+    }
 }

@@ -213,9 +213,9 @@ public class DBConnection {
     return false;
     }
 
-public String getLoggedInUserName() {
-    return loggedInUserName;
-}
+    public String getLoggedInUserName() {
+        return loggedInUserName;
+    }
 
 
     // ROLE METHODS
