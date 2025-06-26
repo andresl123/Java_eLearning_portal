@@ -4,7 +4,7 @@ window.addEventListener("DOMContentLoaded", function () {
         "closeButton": true,
         "progressBar": true,
         "positionClass": "toast-top-right",
-        "timeOut": "3000"
+        "timeOut": "5000"
     };
 
     const loginParam = params.get("login");
