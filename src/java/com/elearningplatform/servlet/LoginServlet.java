@@ -34,7 +34,7 @@ public class LoginServlet extends HttpServlet {
             if (loginSuccess) {
                 String username = db.getLoggedInUserName();
                 if ("Admin".equals(username)) {  // case-sensitive check
-                    response.sendRedirect("adminPanel.jsp");
+                    response.sendRedirect("adminPanel.jsp?login=success");
                 } else {
                     response.sendRedirect("index.jsp?login=success");
                 }
