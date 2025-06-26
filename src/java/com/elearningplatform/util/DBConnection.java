@@ -12,8 +12,8 @@ public class DBConnection {
     private static final String DB_NAME = "elearning_db";
     private static final String DB_URL_WITHOUT_DB = "jdbc:mysql://localhost:3306/";
     private static final String DB_URL = "jdbc:mysql://localhost:3306/" + DB_NAME;
-    private static final String DB_USER = "andre"; // Update for your MySQL connection
-    private static final String DB_PASSWORD = "MySQL123"; // Update for your MySQL connection
+    private static final String DB_USER = "root"; // Update for your MySQL connection
+    private static final String DB_PASSWORD = "sysadmin"; // Update for your MySQL connection
 
     private Connection conn;
     private PreparedStatement pstmt;
@@ -59,7 +59,7 @@ public class DBConnection {
         }
 }
 
-    // Create all tables if they don’t exist
+    // Create all tables if they don't exist
     public void createTablesIfNotExist() throws SQLException {
         connect();
        
@@ -99,6 +99,7 @@ public class DBConnection {
                                                course_desc TEXT NOT NULL,
                                                course_category VARCHAR(100) NOT NULL,
                                                course_rating INT NOT NULL,
+                                               course_image VARCHAR(255),
                                                FOREIGN KEY (user_id) REFERENCES User(user_id),
                                                FOREIGN KEY (role_id) REFERENCES Role(role_id)
                                            )
@@ -112,6 +113,7 @@ public class DBConnection {
                                                section_title VARCHAR(150),
                                                section_duration INT,
                                                section_desc TEXT,
+                                               section_video_url VARCHAR(255),
                                                FOREIGN KEY (course_id) REFERENCES Course(course_id)
                                            )
                                        """);
@@ -234,9 +236,9 @@ public String getLoggedInUserName() {
 
     // COURSE METHODS
 
-    public boolean insertCourse(int userId, int roleId, String name, int price, String status, boolean enroll, String desc, String category, int rating) throws SQLException {
+    public boolean insertCourse(int userId, int roleId, String name, int price, String status, boolean enroll, String desc, String category, int rating, String courseImage) throws SQLException {
         connect();
-        String query = "INSERT INTO Course (user_id, role_id, course_name, course_price, course_status, course_enroll, course_desc, course_category, course_rating) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Course (user_id, role_id, course_name, course_price, course_status, course_enroll, course_desc, course_category, course_rating, course_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         pstmt = conn.prepareStatement(query);
         pstmt.setInt(1, userId);
         pstmt.setInt(2, roleId);
@@ -247,6 +249,7 @@ public String getLoggedInUserName() {
         pstmt.setString(7, desc);
         pstmt.setString(8, category);
         pstmt.setInt(9, rating);
+        pstmt.setString(10, courseImage);
         return pstmt.executeUpdate() > 0;
     }
 
@@ -260,13 +263,14 @@ public String getLoggedInUserName() {
 
     // COURSE DETAILS METHODS
 
-    public boolean insertCourseDetail(int courseId, String sectionTitle, int duration, String sectionDesc) throws SQLException {
-        String query = "INSERT INTO Course_details (course_id, section_title, section_duration, section_desc) VALUES (?, ?, ?, ?)";
+    public boolean insertCourseDetail(int courseId, String sectionTitle, int duration, String sectionDesc, String sectionVideoUrl) throws SQLException {
+        String query = "INSERT INTO Course_details (course_id, section_title, section_duration, section_desc, section_video_url) VALUES (?, ?, ?, ?, ?)";
         pstmt = conn.prepareStatement(query);
         pstmt.setInt(1, courseId);
         pstmt.setString(2, sectionTitle);
         pstmt.setInt(3, duration);
         pstmt.setString(4, sectionDesc);
+        pstmt.setString(5, sectionVideoUrl);
         return pstmt.executeUpdate() > 0;
     }
 
