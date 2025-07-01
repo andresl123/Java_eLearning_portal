@@ -14,11 +14,12 @@
     DBConnection db = new DBConnection();
     try {
         db.insertMockUsers(); // Populates elearning_db with admins, students, and tutors!
+        db.insertMockCoursesAndEnrollments(); // Populates courses, sections, and enrollments!
         //out.println("✅ Mock users inserted successfully!"); // Uncomment for browser debug
     } catch (Exception e) {
         System.out.println("Yikes, DB threw an error: " + e.getMessage()); // Log to console
     } finally {
-        db.closeResources(); // Clean up, don’t leave a mess!
+        db.closeResources(); // Clean up, don't leave a mess!
     }
 %>
 

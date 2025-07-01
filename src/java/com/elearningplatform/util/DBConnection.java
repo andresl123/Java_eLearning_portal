@@ -12,8 +12,8 @@ public class DBConnection {
     private static final String DB_NAME = "elearning_db";
     private static final String DB_URL_WITHOUT_DB = "jdbc:mysql://localhost:3306/";
     private static final String DB_URL = "jdbc:mysql://localhost:3306/" + DB_NAME;
-    private static final String DB_USER = "andre"; // Update for your MySQL connection
-    private static final String DB_PASSWORD = "MySQL123"; // Update for your MySQL connection
+    private static final String DB_USER = "root"; // Update for your MySQL connection
+    private static final String DB_PASSWORD = "sysadmin"; // Update for your MySQL connection
 
     private Connection conn;
     private PreparedStatement pstmt;
@@ -59,7 +59,7 @@ public class DBConnection {
         }
 }
 
-    // Create all tables if they don’t exist
+    // Create all tables if they don't exist
     public void createTablesIfNotExist() throws SQLException {
         connect();
        
@@ -99,6 +99,7 @@ public class DBConnection {
                                                course_desc TEXT NOT NULL,
                                                course_category VARCHAR(100) NOT NULL,
                                                course_rating INT NOT NULL,
+                                               course_image VARCHAR(255),
                                                FOREIGN KEY (user_id) REFERENCES User(user_id),
                                                FOREIGN KEY (role_id) REFERENCES Role(role_id)
                                            )
@@ -112,7 +113,24 @@ public class DBConnection {
                                                section_title VARCHAR(150),
                                                section_duration INT,
                                                section_desc TEXT,
+                                               section_video_url VARCHAR(255),
                                                FOREIGN KEY (course_id) REFERENCES Course(course_id)
+                                           )
+                                       """);
+            
+            // Enrollment Table
+            stmt.executeUpdate("""
+                                           CREATE TABLE IF NOT EXISTS Enrollment (
+                                               enrollment_id INT PRIMARY KEY AUTO_INCREMENT,
+                                               user_id INT,
+                                               course_id INT,
+                                               enrollment_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+                                               completion_status VARCHAR(50) DEFAULT 'In Progress',
+                                               progress_percentage INT DEFAULT 0,
+                                               last_accessed DATETIME DEFAULT CURRENT_TIMESTAMP,
+                                               FOREIGN KEY (user_id) REFERENCES User(user_id),
+                                               FOREIGN KEY (course_id) REFERENCES Course(course_id),
+                                               UNIQUE KEY unique_enrollment (user_id, course_id)
                                            )
                                        """);
         }
@@ -234,9 +252,9 @@ public String getLoggedInUserName() {
 
     // COURSE METHODS
 
-    public boolean insertCourse(int userId, int roleId, String name, int price, String status, boolean enroll, String desc, String category, int rating) throws SQLException {
+    public boolean insertCourse(int userId, int roleId, String name, int price, String status, boolean enroll, String desc, String category, int rating, String courseImage) throws SQLException {
         connect();
-        String query = "INSERT INTO Course (user_id, role_id, course_name, course_price, course_status, course_enroll, course_desc, course_category, course_rating) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Course (user_id, role_id, course_name, course_price, course_status, course_enroll, course_desc, course_category, course_rating, course_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         pstmt = conn.prepareStatement(query);
         pstmt.setInt(1, userId);
         pstmt.setInt(2, roleId);
@@ -247,6 +265,7 @@ public String getLoggedInUserName() {
         pstmt.setString(7, desc);
         pstmt.setString(8, category);
         pstmt.setInt(9, rating);
+        pstmt.setString(10, courseImage);
         return pstmt.executeUpdate() > 0;
     }
 
@@ -260,13 +279,14 @@ public String getLoggedInUserName() {
 
     // COURSE DETAILS METHODS
 
-    public boolean insertCourseDetail(int courseId, String sectionTitle, int duration, String sectionDesc) throws SQLException {
-        String query = "INSERT INTO Course_details (course_id, section_title, section_duration, section_desc) VALUES (?, ?, ?, ?)";
+    public boolean insertCourseDetail(int courseId, String sectionTitle, int duration, String sectionDesc, String sectionVideoUrl) throws SQLException {
+        String query = "INSERT INTO Course_details (course_id, section_title, section_duration, section_desc, section_video_url) VALUES (?, ?, ?, ?, ?)";
         pstmt = conn.prepareStatement(query);
         pstmt.setInt(1, courseId);
         pstmt.setString(2, sectionTitle);
         pstmt.setInt(3, duration);
         pstmt.setString(4, sectionDesc);
+        pstmt.setString(5, sectionVideoUrl);
         return pstmt.executeUpdate() > 0;
     }
 
@@ -277,7 +297,107 @@ public String getLoggedInUserName() {
         return pstmt.executeQuery();
     }
     
+    // ENROLLMENT METHODS
     
+    // Enroll a student in a course. Prevents duplicate enrollments due to unique constraint on (user_id, course_id).
+    public boolean enrollStudent(int userId, int courseId) throws SQLException {
+        connect();
+        String query = "INSERT INTO Enrollment (user_id, course_id) VALUES (?, ?)";
+        pstmt = conn.prepareStatement(query);
+        pstmt.setInt(1, userId);
+        pstmt.setInt(2, courseId);
+        return pstmt.executeUpdate() > 0;
+    }
+    
+    // Update a student's progress in a course (0-100 percentage).
+    public boolean updateEnrollmentProgress(int userId, int courseId, int progressPercentage) throws SQLException {
+        connect();
+        String query = "UPDATE Enrollment SET progress_percentage = ?, last_accessed = CURRENT_TIMESTAMP WHERE user_id = ? AND course_id = ?";
+        pstmt = conn.prepareStatement(query);
+        pstmt.setInt(1, progressPercentage);
+        pstmt.setInt(2, userId);
+        pstmt.setInt(3, courseId);
+        return pstmt.executeUpdate() > 0;
+    }
+    
+    // Update a student's completion status (e.g., In Progress, Completed, Dropped).
+    public boolean updateEnrollmentStatus(int userId, int courseId, String status) throws SQLException {
+        connect();
+        String query = "UPDATE Enrollment SET completion_status = ?, last_accessed = CURRENT_TIMESTAMP WHERE user_id = ? AND course_id = ?";
+        pstmt = conn.prepareStatement(query);
+        pstmt.setString(1, status);
+        pstmt.setInt(2, userId);
+        pstmt.setInt(3, courseId);
+        return pstmt.executeUpdate() > 0;
+    }
+    
+    // Remove a student from a course (unenroll).
+    public boolean unenrollStudent(int userId, int courseId) throws SQLException {
+        connect();
+        String query = "DELETE FROM Enrollment WHERE user_id = ? AND course_id = ?";
+        pstmt = conn.prepareStatement(query);
+        pstmt.setInt(1, userId);
+        pstmt.setInt(2, courseId);
+        return pstmt.executeUpdate() > 0;
+    }
+    
+    // Get all courses a student is enrolled in, including course details like name, description, and price.
+    public ResultSet getStudentEnrollments(int userId) throws SQLException {
+        connect();
+        String query = """
+            SELECT e.*, c.course_name, c.course_desc, c.course_image, c.course_price 
+            FROM Enrollment e 
+            JOIN Course c ON e.course_id = c.course_id 
+            WHERE e.user_id = ?
+            ORDER BY e.enrollment_date DESC
+            """;
+        pstmt = conn.prepareStatement(query);
+        pstmt.setInt(1, userId);
+        return pstmt.executeQuery();
+    }
+    
+    // Get all students enrolled in a specific course, including student names and emails.
+    public ResultSet getCourseEnrollments(int courseId) throws SQLException {
+        connect();
+        String query = """
+            SELECT e.*, u.user_name, u.user_last_name, u.user_email 
+            FROM Enrollment e 
+            JOIN User u ON e.user_id = u.user_id 
+            WHERE e.course_id = ?
+            ORDER BY e.enrollment_date DESC
+            """;
+        pstmt = conn.prepareStatement(query);
+        pstmt.setInt(1, courseId);
+        return pstmt.executeQuery();
+    }
+    
+    // Check if a student is already enrolled in a specific course.
+    public boolean isStudentEnrolled(int userId, int courseId) throws SQLException {
+        connect();
+        String query = "SELECT COUNT(*) FROM Enrollment WHERE user_id = ? AND course_id = ?";
+        pstmt = conn.prepareStatement(query);
+        pstmt.setInt(1, userId);
+        pstmt.setInt(2, courseId);
+        rs = pstmt.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1) > 0;
+        }
+        return false;
+    }
+    
+    // Get the total number of students enrolled in a course (useful for course popularity).
+    public int getEnrollmentCount(int courseId) throws SQLException {
+        connect();
+        String query = "SELECT COUNT(*) FROM Enrollment WHERE course_id = ?";
+        pstmt = conn.prepareStatement(query);
+        pstmt.setInt(1, courseId);
+        rs = pstmt.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1);
+        }
+        return 0;
+    }
+
     // INSERT MOCK INFORMATION
     
     public void insertMockUsers() throws SQLException {
@@ -328,6 +448,135 @@ public String getLoggedInUserName() {
     }
 
     System.out.println("✅ Mock data inserted: 1 Admin, 5 Students, 5 Tutors.");
+}
+
+public void insertMockCoursesAndEnrollments() throws SQLException {
+    connect();
+    createTablesIfNotExist();
+    
+    // Course data with realistic information
+    Object[][] courses = {
+        // userId, roleId, name, price, status, enroll, desc, category, rating, courseImage
+        {3, 3, "Java Programming Fundamentals", 99, "Active", true, 
+         "Learn the basics of Java programming including variables, loops, and object-oriented concepts. Perfect for beginners.", 
+         "Programming", 4, "images/java-fundamentals.jpg"},
+        
+        {4, 3, "Full Stack Web Development", 149, "Active", true,
+         "Master both frontend and backend development with HTML, CSS, JavaScript, and Node.js. Build complete web applications.",
+         "Web Development", 5, "images/fullstack-web.jpg"},
+        
+        {5, 3, "Data Structures and Algorithms", 129, "Active", true,
+         "Deep dive into essential data structures and algorithms. Learn to write efficient and optimized code.",
+         "Computer Science", 5, "images/dsa-course.jpg"},
+        
+        {6, 3, "Cloud Computing with AWS", 179, "Active", true,
+         "Learn cloud computing fundamentals and AWS services. Deploy and manage applications in the cloud.",
+         "Cloud Computing", 4, "images/aws-cloud.jpg"},
+        
+        {7, 3, "Agile Project Management", 89, "Active", true,
+         "Master Agile methodologies including Scrum, Kanban, and Lean. Lead successful project teams.",
+         "Project Management", 4, "images/agile-pm.jpg"}
+    };
+    
+    // Insert courses
+    for (Object[] course : courses) {
+        insertCourse(
+            (Integer) course[0], (Integer) course[1], (String) course[2], 
+            (Integer) course[3], (String) course[4], (Boolean) course[5], 
+            (String) course[6], (String) course[7], (Integer) course[8], 
+            (String) course[9]
+        );
+    }
+    
+    // Course sections data
+    Object[][] sections = {
+        // courseId, sectionTitle, duration, sectionDesc, sectionVideoUrl
+        {1, "Introduction to Java", 45, "Overview of Java programming language and setting up development environment", "videos/java-intro.mp4"},
+        {1, "Variables and Data Types", 60, "Learn about different data types and variable declaration in Java", "videos/java-variables.mp4"},
+        {1, "Control Structures", 75, "Understanding if-else statements, loops, and switch cases", "videos/java-control.mp4"},
+        {1, "Object-Oriented Programming", 90, "Classes, objects, inheritance, and polymorphism", "videos/java-oop.mp4"},
+        
+        {2, "HTML and CSS Basics", 60, "Learn HTML structure and CSS styling fundamentals", "videos/html-css-basics.mp4"},
+        {2, "JavaScript Fundamentals", 75, "Variables, functions, and DOM manipulation", "videos/js-fundamentals.mp4"},
+        {2, "Backend with Node.js", 90, "Server-side programming with Node.js and Express", "videos/nodejs-backend.mp4"},
+        {2, "Database Integration", 60, "Connecting to databases and handling data", "videos/database-integration.mp4"},
+        
+        {3, "Arrays and Linked Lists", 75, "Understanding basic data structures", "videos/arrays-linkedlists.mp4"},
+        {3, "Stacks and Queues", 60, "Stack and queue implementations and applications", "videos/stacks-queues.mp4"},
+        {3, "Trees and Graphs", 90, "Tree and graph data structures and traversal", "videos/trees-graphs.mp4"},
+        {3, "Sorting Algorithms", 75, "Bubble sort, quick sort, merge sort, and their complexities", "videos/sorting-algorithms.mp4"},
+        
+        {4, "AWS Fundamentals", 60, "Introduction to AWS services and cloud concepts", "videos/aws-fundamentals.mp4"},
+        {4, "EC2 and VPC", 75, "Virtual machines and networking in AWS", "videos/ec2-vpc.mp4"},
+        {4, "S3 and Database Services", 60, "Storage and database services in AWS", "videos/s3-database.mp4"},
+        {4, "Deployment and Monitoring", 45, "Deploying applications and monitoring with CloudWatch", "videos/deployment-monitoring.mp4"},
+        
+        {5, "Agile Principles", 45, "Understanding Agile values and principles", "videos/agile-principles.mp4"},
+        {5, "Scrum Framework", 75, "Scrum roles, events, and artifacts", "videos/scrum-framework.mp4"},
+        {5, "Kanban and Lean", 60, "Kanban methodology and Lean principles", "videos/kanban-lean.mp4"},
+        {5, "Agile Tools and Practices", 45, "Using tools like Jira and best practices", "videos/agile-tools.mp4"}
+    };
+    
+    // Insert course sections
+    for (Object[] section : sections) {
+        insertCourseDetail(
+            (Integer) section[0], (String) section[1], (Integer) section[2], 
+            (String) section[3], (String) section[4]
+        );
+    }
+    
+    // Get student IDs for enrollment
+    // First, let's get the student with email C0934658@mylambton.ca (Ed Suelila)
+    String query = "SELECT user_id FROM User WHERE user_email = ?";
+    pstmt = conn.prepareStatement(query);
+    pstmt.setString(1, "C0934658@mylambton.ca");
+    rs = pstmt.executeQuery();
+    
+    int edStudentId = 0;
+    if (rs.next()) {
+        edStudentId = rs.getInt("user_id");
+    }
+    
+    // Get another student (Andre Lopes)
+    pstmt.setString(1, "C0948798@mylambton.ca");
+    rs = pstmt.executeQuery();
+    
+    int andreStudentId = 0;
+    if (rs.next()) {
+        andreStudentId = rs.getInt("user_id");
+    }
+    
+    // Enrollment data
+    Object[][] enrollments = {
+        // userId, courseId, progressPercentage, completionStatus
+        {edStudentId, 1, 75, "In Progress"},      // Ed enrolled in Java Programming (75% complete)
+        {edStudentId, 2, 100, "Completed"},       // Ed completed Full Stack Web Development
+        {edStudentId, 4, 25, "In Progress"},      // Ed enrolled in AWS Cloud Computing (25% complete)
+        
+        {andreStudentId, 1, 100, "Completed"},    // Andre completed Java Programming
+        {andreStudentId, 3, 50, "In Progress"},   // Andre enrolled in Data Structures (50% complete)
+        {andreStudentId, 5, 0, "In Progress"}     // Andre just enrolled in Agile Project Management
+    };
+    
+    // Insert enrollments
+    for (Object[] enrollment : enrollments) {
+        int userId = (Integer) enrollment[0];
+        int courseId = (Integer) enrollment[1];
+        int progress = (Integer) enrollment[2];
+        String status = (String) enrollment[3];
+        
+        // First enroll the student
+        enrollStudent(userId, courseId);
+        
+        // Then update their progress and status
+        updateEnrollmentProgress(userId, courseId, progress);
+        updateEnrollmentStatus(userId, courseId, status);
+    }
+    
+    System.out.println("✅ Mock course data inserted: 5 Courses with 20 Sections");
+    System.out.println("✅ Mock enrollment data inserted: 2 Students enrolled in 6 courses total");
+    System.out.println("   - Ed Suelila (C0934658@mylambton.ca): 3 courses enrolled");
+    System.out.println("   - Andre Lopes (C0948798@mylambton.ca): 3 courses enrolled");
 }
 
 	
