@@ -6,6 +6,8 @@
     Description: Landing page for E-Learning Platform, sets up DB, shows hardcoded courses, with a split banner and navbar search.
 --%>
 
+
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.elearningplatform.util.DBConnection" %>
 <%@ include file="navbar.jsp" %> <!-- Grab that navbar with search -->
@@ -60,7 +62,7 @@
                 <div class="col-md-6">
                     <h1>Welcome to E-Learning Platform</h1>
                     <p class="lead">Get started with your online learning journey today! Explore courses, register, or log in to begin.</p>
-                    <a href="register.jsp" class="btn btn-light mt-3">Get Started</a>
+                    <a href="createAccount.jsp" class="btn btn-light mt-3">Get Started</a>
                 </div>
                 <div class="col-md-6">
                     <img src="https://i.imgur.com/wRM8o64.jpeg" alt="E-Learning Banner" class="img-fluid rounded">

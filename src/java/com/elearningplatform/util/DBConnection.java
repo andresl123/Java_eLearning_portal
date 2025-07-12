@@ -12,8 +12,8 @@ public class DBConnection {
     private static final String DB_NAME = "elearning_db";
     private static final String DB_URL_WITHOUT_DB = "jdbc:mysql://localhost:3306/";
     private static final String DB_URL = "jdbc:mysql://localhost:3306/" + DB_NAME;
-    private static final String DB_USER = "root"; // Update for your MySQL connection
-    private static final String DB_PASSWORD = "sysadmin"; // Update for your MySQL connection
+    private static final String DB_USER = "mayerlin"; // Update for your MySQL connection
+    private static final String DB_PASSWORD = "MySQL123"; // Update for your MySQL connection
 
     private Connection conn;
     private PreparedStatement pstmt;
@@ -146,6 +146,17 @@ public class DBConnection {
     }
 
     // USER METHODS
+    
+    public boolean verifyUserExist(String email) throws SQLException{
+        connect();
+        String query = "SELECT user_email FROM user WHERE user_email = ?";
+        pstmt = conn.prepareStatement(query);
+        pstmt.setString(1, email);
+        ResultSet rs; 
+        rs = pstmt.executeQuery(); 
+        
+        return rs.next(); 
+        }
 
     public boolean insertUser(int roleId, String firstName, String lastName, String email, String password, String tutorDesc) throws SQLException {
         connect();
@@ -247,6 +258,13 @@ public class DBConnection {
         String query = "SELECT * FROM Role WHERE role_id = ?";
         pstmt = conn.prepareStatement(query);
         pstmt.setInt(1, roleId);
+        return pstmt.executeQuery();
+    }
+    
+    public ResultSet getRoleIDByName(String roleName) throws SQLException {
+        String query = "SELECT role_id FROM Role WHERE role_name = ?";
+        pstmt = conn.prepareStatement(query);
+        pstmt.setString(1, roleName);
         return pstmt.executeQuery();
     }
 

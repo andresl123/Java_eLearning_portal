@@ -30,7 +30,7 @@
                     String role = (String) session.getAttribute("role");
                     if (role == null) {
                         out.println("<li class='nav-item'><a class='nav-link' href='login.jsp'>Login</a></li>");
-                        out.println("<li class='nav-item'><a class='nav-link' href='register.jsp'>Register</a></li>");
+                        out.println("<li class='nav-item'><a class='nav-link' href='createAccount.jsp'>Register</a></li>");
                     } else if (role.equals("student")) {
                         out.println("<li class='nav-item'><a class='nav-link' href='studentDashboard.jsp'>Dashboard</a></li>");
                         out.println("<li class='nav-item'><a class='nav-link' href='logout'>Logout</a></li>");
