@@ -116,6 +116,8 @@
 
     <!-- Footer with some legal stuff -->
     <footer class="bg-dark text-white text-center py-3 mt-5">
+        <h2>Welcome, <%= session.getAttribute("username") %></h2>
+        <h2>with Role: <%= session.getAttribute("role") %></h2>
         <p>© 2025 E-Learning Platform | <a href="#" class="text-white">About Us</a> | <a href="#" class="text-white">Contact</a></p>
     </footer>
 </body>

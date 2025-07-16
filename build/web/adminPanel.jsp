@@ -84,6 +84,10 @@
             <button type="submit" name="action" value="list" class="btn btn-outline-warning">View All Users</button>
         </form>
     </div>
+    <footer>
+        <h2>Welcome, <%= session.getAttribute("username") %></h2>
+        <h2>with Role: <%= session.getAttribute("role") %></h2>
+    </footer>
 
 </body>
 </html>

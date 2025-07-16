@@ -30,14 +30,17 @@ public class LoginServlet extends HttpServlet {
             db.connect();
 
             boolean loginSuccess = db.verifyUserLogin(userEmail, password);
-
             if (loginSuccess) {
+                HttpSession session = request.getSession();
+                session.setAttribute("username", db.getLoggedInUserName());
+                session.setAttribute("role", db.getLoggedInRoleId());
                 String username = db.getLoggedInUserName();
                 if ("Admin".equals(username)) {  // case-sensitive check
                     response.sendRedirect("adminPanel.jsp?login=success");
                 } else {
                     response.sendRedirect("index.jsp?login=success");
                 }
+//                response.sendRedirect("index.jsp");
             } else {
                 response.sendRedirect("login.jsp?login=fail");
             }
