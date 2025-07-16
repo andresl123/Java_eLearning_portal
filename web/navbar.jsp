@@ -6,7 +6,7 @@
             <a class="navbar-brand" href="index.jsp">
                 <img src="https://shulenihub.com/pluginfile.php/1/theme_moove/logo/1749635087/Logo-Transparent.png" alt="E-Learning Logo" style="width: 50px; height: 50px; margin-right: 10px;">
             </a>
-            <a class="nav-link fw-bold" href="index.jsp">Explore</a>
+            <a class="nav-link text-white" href="allCourses.jsp">Explore</a>
         </div>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
