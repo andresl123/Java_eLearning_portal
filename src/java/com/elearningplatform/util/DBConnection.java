@@ -21,6 +21,7 @@ public class DBConnection {
     
     private String loggedInUserName;
     private Integer roleId;
+    private Integer userId;
     
     public Connection getConn() {
         return conn;
@@ -228,7 +229,7 @@ public class DBConnection {
 
 
     public boolean verifyUserLogin(String email, String password) throws SQLException {
-        String query = "SELECT role_id,user_name FROM User WHERE user_email = ? AND user_password = ?";
+        String query = "SELECT user_id,role_id,user_name FROM User WHERE user_email = ? AND user_password = ?";
         pstmt = conn.prepareStatement(query);
         pstmt.setString(1, email.trim());
         pstmt.setString(2, password.trim());
@@ -237,6 +238,7 @@ public class DBConnection {
         if (rs.next()) {
             loggedInUserName = rs.getString("user_name");
             roleId = rs.getInt("role_id");
+            userId = rs.getInt("user_id");
             return true;
         }
         return false;
@@ -247,6 +249,9 @@ public class DBConnection {
     }
     public Integer getLoggedInRoleId() {
             return roleId;
+    }
+    public Integer getLoggedInuserId() {
+            return userId;
     }
 
 

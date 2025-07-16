@@ -10,9 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 
 // Placeholder: Implement doPost to handle login form submission, validate user via UserDAO, and redirect.
 // Connects to: UserDAO for authentication, login.jsp for form input, studentDashboard.jsp/adminPanel.jsp for redirect.
@@ -34,13 +31,13 @@ public class LoginServlet extends HttpServlet {
                 HttpSession session = request.getSession();
                 session.setAttribute("username", db.getLoggedInUserName());
                 session.setAttribute("role", db.getLoggedInRoleId());
+                session.setAttribute("userId", db.getLoggedInuserId());
                 String username = db.getLoggedInUserName();
                 if ("Admin".equals(username)) {  // case-sensitive check
                     response.sendRedirect("adminPanel.jsp?login=success");
                 } else {
                     response.sendRedirect("index.jsp?login=success");
                 }
-//                response.sendRedirect("index.jsp");
             } else {
                 response.sendRedirect("login.jsp?login=fail");
             }

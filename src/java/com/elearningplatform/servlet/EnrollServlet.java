@@ -4,6 +4,8 @@
  */
 package com.elearningplatform.servlet;
 
+import java.sql.SQLException;
+import com.elearningplatform.util.DBConnection;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -73,21 +75,54 @@ public class EnrollServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession session = request.getSession(false);
-        String role = (String) session.getAttribute("role");
-        String username = (String) session.getAttribute("username");
-        String courseId = request.getParameter("courseId");
-
-        if (!"student".equalsIgnoreCase(role)) {
-            request.setAttribute("error", "Only students can enroll in courses.");
-            request.getRequestDispatcher("course.jsp?id=" + courseId).forward(request, response);
+            HttpSession session = request.getSession(false);
+            Integer role = (Integer) session.getAttribute("role");
+            String username = (String) session.getAttribute("username");
+            // Retrieve parameters from the form submission
+            String userIdStr = request.getParameter("userId");
+            String courseIdStr = request.getParameter("courseId");
+            // Validate that both IDs are provided
+            if (userIdStr == null || courseIdStr == null || userIdStr.trim().isEmpty() || courseIdStr.trim().isEmpty()) {
+                // Redirect with an error if parameters are missing or empty
+                response.sendRedirect("courseDetailsStudent.jsp?courseId=" + courseIdStr + "&error=invalid_input");
+                return;
+            }
+            
+            if (!role.equals(2)) {
+                request.setAttribute("error", "Only students can enroll in courses.");
+                return;
+            }
+            int userId;
+            int courseId;   
+        try {
+            // Parse the string IDs to integers, throwing an exception if invalid
+            userId = Integer.parseInt(userIdStr);
+            courseId = Integer.parseInt(courseIdStr);
+        } catch (NumberFormatException e) {
+            // Redirect with an error if parsing fails
+            response.sendRedirect("courseDetailsStudent.jsp?courseId=" + courseIdStr + "&error=invalid_id");
             return;
         }
 
-        // Enroll logic here (insert into enrollment table)
-        // enrollmentDAO.enroll(username, courseId);
-
-        response.sendRedirect("dashboard.jsp");
+        DBConnection db = new DBConnection();
+        try {
+            db.connect();
+            // Call the enrollStudent method from DBConnection to insert into Enrollment table
+            boolean enrolled = db.enrollStudent(userId, courseId);
+            if (enrolled) {
+                // Redirect with success message if enrollment succeeds
+                response.sendRedirect("courseDetailsStudent.jsp?courseId=" + courseId + "&message=enrolled_success");
+            } else {
+                // Redirect with error if enrollment fails (e.g., duplicate entry due to unique constraint)
+                response.sendRedirect("courseDetailsStudent.jsp?courseId=" + courseId + "&error=enrollment_failed");
+            }
+        } catch (SQLException e) {
+            // Redirect with SQL error message if database operation fails
+            response.sendRedirect("courseDetailsStudent.jsp?courseId=" + courseId + "&error=sql_error&message=" + e.getMessage());
+        } finally {
+            // Ensure database resources are closed
+            db.closeResources();
+        }
     }
 
     /**
