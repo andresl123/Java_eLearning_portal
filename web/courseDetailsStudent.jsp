@@ -8,12 +8,20 @@
     <meta charset="UTF-8">
     <title>Course Details for Students</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/courseDetails.css">
 </head>
 <body>
     <%@ include file="navbar.jsp" %>
     <div class="container mt-5">
+        <%
+            String message = request.getParameter("message");
+            String error = request.getParameter("error");
+            if (message != null) {
+                out.println("<p class='text-success'>" + message + "</p>");
+            } else if (error != null) {
+                out.println("<p class='text-danger'>Error: " + error + "</p>");
+            }
+        %>
         <%
             String courseIdStr = request.getParameter("courseId");
             if (courseIdStr == null || courseIdStr.trim().isEmpty()) {
@@ -43,6 +51,7 @@
                         int courseRating = courseRs.getInt("course_rating");
                         String courseDesc = courseRs.getString("course_desc");
                         String courseImage = courseRs.getString("course_image");
+                        Integer userId = (Integer) session.getAttribute("userId"); // Assume from session
         %>
         <!-- Hero Section -->
         <div class="course-hero bg-light p-4 rounded shadow-sm mb-4">
@@ -55,6 +64,39 @@
                     <p class="text-muted">Category: <%= courseCategory %></p>
                     <p class="h3 text-success">Price: $<%= coursePrice %></p>
                     <p class="h5">Rating: <%= courseRating %>/5 <span class="text-warning">★</span></p>
+                                <!-- ✅ Enroll Button Form -->
+            <form action="EnrollServlet" method="post" class="mt-3">
+                <input type="hidden" name="courseId" value="<%= courseId %>">
+                <% 
+                    if (userId != null) {
+                %>
+                    <input type="hidden" name="userId" value="<%= userId %>">
+                    <button type="submit" class="btn btn-success">Enroll in this Course</button>
+                <% } else { %>
+                    <p class="text-warning mt-2">Please <a href="login.jsp">log in</a> to enroll in this course.</p>
+                <% } %>
+            </form>
+                    <!-- Enrollment Form (Commented for now - Educational Comments) -->
+                    <%--
+                        This section creates a form for student enrollment.
+                        - The form submits to EnrollServlet via POST.
+                        - <input type="hidden" name="courseId"> passes the course_id from the URL parameter.
+                        - <input type="hidden" name="userId"> will pass the user_id from the session (set by Andre's login logic).
+                        - The if (userId != null) check ensures the button only appears if the user is logged in.
+                        - If userId is null, it displays a login prompt instead.
+                        - Uncomment this block and ensure session.getAttribute("userId") is set after Andre implements user management.
+                    --%>
+                    <%--
+                    <form action="EnrollServlet" method="post" class="mt-3">
+                        <input type="hidden" name="courseId" value="<%= courseId %>">
+                        <% if (userId != null) { %>
+                            <input type="hidden" name="userId" value="<%= userId %>">
+                            <button type="submit" class="btn btn-success">Enroll Now</button>
+                        <% } else { %>
+                            <p class="text-warning">Please log in to enroll.</p>
+                        <% } %>
+                    </form>
+                    --%>
                 </div>
             </div>
         </div>

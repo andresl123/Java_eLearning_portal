@@ -64,6 +64,7 @@
                         String courseCategory = rs.getString("course_category");
                         int courseRating = rs.getInt("course_rating");
                         String courseImage = rs.getString("course_image");
+                        session.setAttribute("courseId", rs.getInt("course_id"));
             %>
             <div class="col-md-4 mb-4 course-card" data-category="<%= courseCategory %>" data-price="<%= coursePrice %>" data-rating="<%= courseRating %>">
                 <div class="card h-100 shadow-sm">
@@ -73,6 +74,7 @@
                         <p class="card-text">Category: <%= courseCategory %></p>
                         <p class="card-text">Price: $<%= coursePrice %></p>
                         <p class="card-text">Rating: <%= courseRating %>/5 <span class="text-warning">★</span></p>
+                        <h2>Course ID: <%= session.getAttribute("courseId") %></h2>
                         <%-- this should send the id of the course to course details page --%>
                         <a href="courseDetailsStudent.jsp?courseId=<%= courseId %>" class="btn btn-primary mt-auto">View Details</a>
                     </div>
