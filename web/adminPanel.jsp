@@ -5,11 +5,36 @@
 --%>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="navbar.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Admin Panel</title>
-    <!-- Bootstrap CSS CDN -->
+    <!-- Bootstrap CSS for that responsive goodness -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons just to test the search bar -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    
+    <!-- Our custom styles to make it pop -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- Toastr CSS for those sweet notifications -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    
+    <!-- jQuery (Toastr needs it) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Toastr JS for pop-up action -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    
+    <!-- Our custom JS, keeping it chill -->
+    <script src="js/scripts.js"></script>
+    
+    <!-- Bootstrap JS for navbar and more -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+        <!-- Bootstrap CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/adminPanel.css">
         <!-- Toastr CSS -->
