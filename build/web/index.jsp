@@ -10,13 +10,15 @@
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.elearningplatform.util.DBConnection" %>
+<%@ page import="com.elearningplatform.util.MockDataLoader" %>
 <%@ include file="navbar.jsp" %> <!-- Grab that navbar with search -->
 <%
     // Fire up the DB and drop in those mock users on first load!
     DBConnection db = new DBConnection();
+    MockDataLoader mockLoader = new MockDataLoader(db);
     try {
-        db.insertMockUsers(); // Populates elearning_db with admins, students, and tutors!
-        db.insertMockCoursesAndEnrollments(); // Populates courses, sections, and enrollments!
+        mockLoader.insertMockUsers(); // Populates elearning_db with admins, students, and tutors!
+        mockLoader.insertMockCoursesAndEnrollments(); // Populates courses, sections, and enrollments!
         //out.println("✅ Mock users inserted successfully!"); // Uncomment for browser debug
     } catch (Exception e) {
         System.out.println("Yikes, DB threw an error: " + e.getMessage()); // Log to console
