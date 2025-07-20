@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
-<%@ page import="com.elearningplatform.model.CourseDetail" %> <%-- Update this package to match yours --%>
+<%@ page import="com.elearningplatform.model.Course" %> <%-- Update this package to match yours --%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -89,7 +89,7 @@
 
     <!-- ✅ Course Table -->
     <%
-        List<CourseDetail> courseList = (List<CourseDetail>) request.getAttribute("courseList");
+        List<Course> courseList = (List<Course>) request.getAttribute("courseList");
         if (courseList != null && !courseList.isEmpty()) {
     %>
         <table class="table table-bordered table-striped">
@@ -109,7 +109,7 @@
             </thead>
             <tbody>
             <%
-                for (CourseDetail c : courseList) {
+                for (Course c : courseList) {
             %>
                 <tr>
                     <td><%= c.getCourseId() %></td>
@@ -137,4 +137,4 @@
     %>
 </div>
 </body>
-</html>
+</html> 

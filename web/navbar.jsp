@@ -27,17 +27,17 @@
             <!-- Role-Based Links on the Right -->
             <ul class="navbar-nav ms-auto align-items-center">
                 <%
-                    Integer role = (Integer) session.getAttribute("role");
-                    if (role == null) {
+                    Integer navRole = (Integer) session.getAttribute("role");
+                    if (navRole == null) {
                         out.println("<li class='nav-item'><a class='nav-link' href='login.jsp'>Login</a></li>");
                         out.println("<li class='nav-item'><a class='nav-link' href='createAccount.jsp'>Register</a></li>");
-                    } else if (role.equals(2)) {
+                    } else if (navRole.equals(2)) {
                         out.println("<li class='nav-item'><a class='nav-link' href='studentDashboard.jsp'>Dashboard</a></li>");
                         out.println("<li class='nav-item'><a class='nav-link' href='logout'>Logout</a></li>");
-                    } else if (role.equals(3)) {
-                        out.println("<li class='nav-item'><a class='nav-link' href='tutorCourses.jsp'>My Courses</a></li>");
+                    } else if (navRole.equals(3)) {
+                        out.println("<li class='nav-item'><a class='nav-link' href='tutorDashboard.jsp'>My Courses</a></li>");
                         out.println("<li class='nav-item'><a class='nav-link' href='logout'>Logout</a></li>");
-                    } else if (role.equals(1)) {
+                    } else if (navRole.equals(1)) {
                         out.println("<li class='nav-item'><a class='nav-link' href='adminPanel.jsp'>Admin Panel</a></li>");
                         out.println("<li class='nav-item'><a class='nav-link' href='logout'>Logout</a></li>");
                     }

@@ -76,7 +76,7 @@
                         <p class="card-text">Rating: <%= courseRating %>/5 <span class="text-warning">★</span></p>
                         <h2>Course ID: <%= session.getAttribute("courseId") %></h2>
                         <%-- this should send the id of the course to course details page --%>
-                        <a href="courseDetailsStudent.jsp?courseId=<%= courseId %>" class="btn btn-primary mt-auto">View Details</a>
+                        <a href="courseStudent.jsp?courseId=<%= courseId %>" class="btn btn-primary mt-auto">View Details</a>
                     </div>
                 </div>
             </div>

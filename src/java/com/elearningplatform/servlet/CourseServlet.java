@@ -2,7 +2,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 
-import com.elearningplatform.model.CourseDetail; // Make sure this matches your package
+import com.elearningplatform.model.Course; // Make sure this matches your package
 import com.elearningplatform.util.DBConnection;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -73,9 +73,9 @@ public class CourseServlet extends HttpServlet {
                 pstmt.setInt(1, userId);
                 ResultSet rs = pstmt.executeQuery();
 
-                List<CourseDetail> courseList = new ArrayList<>();
+                List<Course> courseList = new ArrayList<>();
                 while (rs.next()) {
-                    CourseDetail c = new CourseDetail();
+                    Course c = new Course();
                     c.setCourseId(rs.getInt("course_id"));
                     c.setUserId(rs.getInt("user_id"));
                     c.setRoleId(rs.getInt("role_id"));
