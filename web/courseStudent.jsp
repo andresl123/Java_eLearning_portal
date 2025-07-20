@@ -76,27 +76,6 @@
                     <p class="text-warning mt-2">Please <a href="login.jsp">log in</a> to enroll in this course.</p>
                 <% } %>
             </form>
-                    <!-- Enrollment Form (Commented for now - Educational Comments) -->
-                    <%--
-                        This section creates a form for student enrollment.
-                        - The form submits to EnrollServlet via POST.
-                        - <input type="hidden" name="courseId"> passes the course_id from the URL parameter.
-                        - <input type="hidden" name="userId"> will pass the user_id from the session (set by Andre's login logic).
-                        - The if (userId != null) check ensures the button only appears if the user is logged in.
-                        - If userId is null, it displays a login prompt instead.
-                        - Uncomment this block and ensure session.getAttribute("userId") is set after Andre implements user management.
-                    --%>
-                    <%--
-                    <form action="EnrollServlet" method="post" class="mt-3">
-                        <input type="hidden" name="courseId" value="<%= courseId %>">
-                        <% if (userId != null) { %>
-                            <input type="hidden" name="userId" value="<%= userId %>">
-                            <button type="submit" class="btn btn-success">Enroll Now</button>
-                        <% } else { %>
-                            <p class="text-warning">Please log in to enroll.</p>
-                        <% } %>
-                    </form>
-                    --%>
                 </div>
             </div>
         </div>
@@ -149,4 +128,4 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html>
+</html> 

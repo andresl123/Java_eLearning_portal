@@ -1,6 +1,6 @@
 package com.elearningplatform.model; // Adjust if needed
 
-public class CourseDetail {
+public class Course {
     private int courseId;
     private int userId;
     private int roleId;

@@ -89,23 +89,23 @@ public class MockDataLoader {
         // Course data with realistic information
         Object[][] courses = {
             // userId, roleId, name, price, status, enroll, desc, category, rating, courseImage
-            {3, 3, "Java Programming Fundamentals", 99, "Active", true, 
+            {7, 3, "Java Programming Fundamentals", 99, "Active", true, 
              "Learn the basics of Java programming including variables, loops, and object-oriented concepts. Perfect for beginners.", 
              "Programming", 4, "images/java-fundamentals.jpg"},
             
-            {4, 3, "Full Stack Web Development", 149, "Active", true,
+            {8, 3, "Full Stack Web Development", 149, "Active", true,
              "Master both frontend and backend development with HTML, CSS, JavaScript, and Node.js. Build complete web applications.",
              "Web Development", 5, "images/fullstack-web.jpg"},
             
-            {5, 3, "Data Structures and Algorithms", 129, "Active", true,
+            {9, 3, "Data Structures and Algorithms", 129, "Active", true,
              "Deep dive into essential data structures and algorithms. Learn to write efficient and optimized code.",
              "Computer Science", 5, "images/dsa-course.jpg"},
             
-            {6, 3, "Cloud Computing with AWS", 179, "Active", true,
+            {10, 3, "Cloud Computing with AWS", 179, "Active", true,
              "Learn cloud computing fundamentals and AWS services. Deploy and manage applications in the cloud.",
              "Cloud Computing", 4, "images/aws-cloud.jpg"},
             
-            {7, 3, "Agile Project Management", 89, "Active", true,
+            {11, 3, "Agile Project Management", 89, "Active", true,
              "Master Agile methodologies including Scrum, Kanban, and Lean. Lead successful project teams.",
              "Project Management", 4, "images/agile-pm.jpg"}
         };
