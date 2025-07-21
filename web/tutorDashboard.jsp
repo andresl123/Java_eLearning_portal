@@ -73,7 +73,7 @@
                     <td><%= course.get("name") %></td>
                     <td><%= status %></td>
                     <td>
-                        <!-- Edit, Delete, and Hide/Unhide buttons for each course -->
+                        <!-- Edit, Delete, Hide/Unhide, and Add Sections buttons for each course -->
                         <form action="EditCourseServlet" method="get" style="display:inline;">
                             <input type="hidden" name="courseId" value="<%= course.get("id") %>">
                             <button class="btn btn-sm btn-warning">Edit</button>
@@ -87,6 +87,10 @@
                             <button class="btn btn-sm btn-secondary">
                                 <%= isHidden ? "Unhide" : "Hide" %>
                             </button>
+                        </form>
+                        <form action="manageSections.jsp" method="get" style="display:inline;">
+                            <input type="hidden" name="courseId" value="<%= course.get("id") %>">
+                            <button class="btn btn-sm btn-info">Add Sections</button>
                         </form>
                     </td>
                 </tr>

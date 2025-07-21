@@ -53,7 +53,7 @@ public class CourseServlet extends HttpServlet {
                 request.setAttribute("message", "Error creating course: " + e.getMessage());
             }
 
-            request.getRequestDispatcher("courseDetails.jsp").forward(request, response);
+            request.getRequestDispatcher("tutorDashboard.jsp").forward(request, response);
         }
     }
 
