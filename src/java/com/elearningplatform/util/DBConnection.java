@@ -318,11 +318,33 @@ public class DBConnection {
         return pstmt.executeUpdate() > 0;
     }
 
+    public boolean updateCourseDetail(int sectionId, String sectionTitle, int duration, String sectionDesc, String sectionVideoUrl) throws SQLException {
+        String query = "UPDATE Course_details SET section_title = ?, section_duration = ?, section_desc = ?, section_video_url = ? WHERE section_id = ?";
+        PreparedStatement pstmt = conn.prepareStatement(query);
+        pstmt.setString(1, sectionTitle);
+        pstmt.setInt(2, duration);
+        pstmt.setString(3, sectionDesc);
+        pstmt.setString(4, sectionVideoUrl);
+        pstmt.setInt(5, sectionId);
+        int affectedRows = pstmt.executeUpdate();
+        pstmt.close();
+        return affectedRows > 0;
+    }
+
     public ResultSet getCourseDetailsByCourseId(int courseId) throws SQLException {
         String query = "SELECT * FROM Course_details WHERE course_id = ?";
         pstmt = conn.prepareStatement(query);
         pstmt.setInt(1, courseId);
         return pstmt.executeQuery();
+    }
+    
+    public boolean deleteCourseDetail(int sectionId) throws SQLException {
+        String query = "DELETE FROM Course_details WHERE section_id = ?";
+        PreparedStatement pstmt = conn.prepareStatement(query);
+        pstmt.setInt(1, sectionId);
+        int affectedRows = pstmt.executeUpdate();
+        pstmt.close();
+        return affectedRows > 0;
     }
     
     // ENROLLMENT METHODS
