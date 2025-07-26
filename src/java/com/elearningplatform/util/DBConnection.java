@@ -115,7 +115,7 @@ public class DBConnection {
                                                section_title VARCHAR(150),
                                                section_duration INT,
                                                section_desc TEXT,
-                                               section_video_url VARCHAR(255),
+                                               section_video_url TEXT,
                                                FOREIGN KEY (course_id) REFERENCES Course(course_id)
                                            )
                                        """);
