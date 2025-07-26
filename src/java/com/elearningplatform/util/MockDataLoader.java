@@ -91,23 +91,23 @@ public class MockDataLoader {
             // userId, roleId, name, price, status, enroll, desc, category, rating, courseImage
             {7, 3, "Java Programming Fundamentals", 99, "Active", true, 
              "Learn the basics of Java programming including variables, loops, and object-oriented concepts. Perfect for beginners.", 
-             "Programming", 4, "images/java-fundamentals.jpg"},
+             "Programming", 4, "https://img.freepik.com/premium-psd/school-education-admission-youtube-thumbnail-web-banner-template_475351-410.jpg"},
             
             {8, 3, "Full Stack Web Development", 149, "Active", true,
              "Master both frontend and backend development with HTML, CSS, JavaScript, and Node.js. Build complete web applications.",
-             "Web Development", 5, "images/fullstack-web.jpg"},
+             "Web Development", 5, "https://www.codingbytes.com/wp-content/uploads/2022/03/full-stack-web-development.jpg"},
             
             {9, 3, "Data Structures and Algorithms", 129, "Active", true,
              "Deep dive into essential data structures and algorithms. Learn to write efficient and optimized code.",
-             "Computer Science", 5, "images/dsa-course.jpg"},
+             "Computer Science", 5, "https://learncraftacademy.com/wp-content/uploads/2024/12/https___dev-to-uploads.s3.amazonaws.com_uploads_articles_6gsw2jl53ye6aabdndqg.png"},
             
             {10, 3, "Cloud Computing with AWS", 179, "Active", true,
              "Learn cloud computing fundamentals and AWS services. Deploy and manage applications in the cloud.",
-             "Cloud Computing", 4, "images/aws-cloud.jpg"},
+             "Cloud Computing", 4, "https://www.skillvertex.com/blog/wp-content/uploads/2023/04/data-science-thumbnail.png"},
             
             {11, 3, "Agile Project Management", 89, "Active", true,
              "Master Agile methodologies including Scrum, Kanban, and Lean. Lead successful project teams.",
-             "Project Management", 4, "images/agile-pm.jpg"}
+             "Project Management", 4, "https://i0.wp.com/visionateacademy.com/wp-content/uploads/2023/05/Lean-Agile-Project-Management-Course-by-Visionate-Academy.jpg"}
         };
         // Insert courses
         for (Object[] course : courses) {
