@@ -2,7 +2,6 @@
 <%@ page import="com.elearningplatform.util.DBConnection" %>
 <%@ page import="java.sql.ResultSet" %>
 <%@ page import="java.sql.SQLException" %>
-<%@ include file="navbar.jsp" %> <!-- Pulling in that navbar with the search bar -->
 <!DOCTYPE html>
 <html>
 <head>

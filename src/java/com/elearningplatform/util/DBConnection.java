@@ -13,7 +13,7 @@ public class DBConnection {
     private static final String DB_URL_WITHOUT_DB = "jdbc:mysql://localhost:3306/";
     private static final String DB_URL = "jdbc:mysql://localhost:3306/" + DB_NAME;
     private static final String DB_USER = "root"; // Update for your MySQL connection
-    private static final String DB_PASSWORD = "1234"; // Update for your MySQL connection
+    private static final String DB_PASSWORD = "sysadmin"; // Update for your MySQL connection
 
     private Connection conn;
     private PreparedStatement pstmt;
