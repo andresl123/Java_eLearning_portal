@@ -40,6 +40,15 @@
     <div class="container mt-5">
         <!-- Table listing all courses for admins, or only own courses for tutors -->
         <h3 class="mb-4">Manage Courses</h3>
+        
+        <%
+            String message = (String) request.getAttribute("message");
+            if (message != null) {
+        %>
+            <div class="alert alert-info"><%= message %></div>
+        <%
+            }
+        %>
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -60,15 +69,18 @@
                     <td><%= course.get("owner") %></td>
                     <td>
                         <!-- Edit, Delete, and Hide/Unhide buttons for each course -->
-                        <form action="EditCourseServlet" method="get" style="display:inline;">
+                        <form action="CourseServlet" method="get" style="display:inline;">
+                            <input type="hidden" name="action" value="edit">
                             <input type="hidden" name="courseId" value="<%= course.get("id") %>">
                             <button class="btn btn-sm btn-warning">Edit</button>
                         </form>
-                        <form action="DeleteCourseServlet" method="post" style="display:inline;">
+                        <form action="CourseServlet" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this course? This will also delete all enrollments and sections.');">
+                            <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="courseId" value="<%= course.get("id") %>">
                             <button class="btn btn-sm btn-danger">Delete</button>
                         </form>
-                        <form action="ToggleVisibilityServlet" method="post" style="display:inline;">
+                        <form action="CourseServlet" method="post" style="display:inline;">
+                            <input type="hidden" name="action" value="toggleVisibility">
                             <input type="hidden" name="courseId" value="<%= course.get("id") %>">
                             <button class="btn btn-sm btn-secondary">
                                 <%= isHidden ? "Unhide" : "Hide" %>

@@ -58,6 +58,15 @@
             </div>
 
             <div class="mb-3">
+                <label class="form-label">Course Image URL</label>
+                <input type="url" class="form-control" name="courseImage" placeholder="https://example.com/image.jpg">
+                <small class="form-text text-muted">
+                    Enter a direct URL to your course image (JPG, PNG, etc.).<br>
+                    Examples: https://example.com/course-image.jpg, https://via.placeholder.com/300x200
+                </small>
+            </div>
+
+            <div class="mb-3">
                 <label class="form-label">Rating (1–5)</label>
                 <input type="number" class="form-control" name="rating" min="1" max="5" required>
             </div>

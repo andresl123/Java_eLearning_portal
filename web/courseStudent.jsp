@@ -108,7 +108,16 @@
                 <div id="collapse<%= sectionIndex %>" class="accordion-collapse collapse" aria-labelledby="heading<%= sectionIndex %>" data-bs-parent="#sectionsAccordion">
                     <div class="accordion-body">
                         <p><%= sectionDesc %></p>
-                        <a href="<%= sectionVideoUrl != null ? sectionVideoUrl : "#" %>" class="btn btn-info mt-2" target="_blank">Watch Video</a>
+                        <% if (sectionVideoUrl != null && !sectionVideoUrl.trim().isEmpty()) { %>
+                            <div class="video-container mt-3">
+                                <video controls width="100%" height="100%">
+                                    <source src="<%= sectionVideoUrl %>" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                        <% } else { %>
+                            <p class="text-muted">No video available for this section.</p>
+                        <% } %>
                     </div>
                 </div>
             </div>

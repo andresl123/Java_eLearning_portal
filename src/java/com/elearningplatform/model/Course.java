@@ -10,6 +10,7 @@ public class Course {
     private boolean enroll;
     private String desc;
     private String category;
+    private String courseImage;
     private int rating;
 
     // Getters and Setters
@@ -84,6 +85,14 @@ public class Course {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getCourseImage() {
+        return courseImage;
+    }
+
+    public void setCourseImage(String courseImage) {
+        this.courseImage = courseImage;
     }
 
     public int getRating() {

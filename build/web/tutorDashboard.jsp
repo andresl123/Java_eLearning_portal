@@ -74,15 +74,18 @@
                     <td><%= status %></td>
                     <td>
                         <!-- Edit, Delete, Hide/Unhide, and Add Sections buttons for each course -->
-                        <form action="EditCourseServlet" method="get" style="display:inline;">
+                        <form action="CourseServlet" method="get" style="display:inline;">
+                            <input type="hidden" name="action" value="edit">
                             <input type="hidden" name="courseId" value="<%= course.get("id") %>">
                             <button class="btn btn-sm btn-warning">Edit</button>
                         </form>
-                        <form action="DeleteCourseServlet" method="post" style="display:inline;">
+                        <form action="CourseServlet" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this course? This will also delete all enrollments and sections.');">
+                            <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="courseId" value="<%= course.get("id") %>">
                             <button class="btn btn-sm btn-danger">Delete</button>
                         </form>
-                        <form action="ToggleVisibilityServlet" method="post" style="display:inline;">
+                        <form action="CourseServlet" method="post" style="display:inline;">
+                            <input type="hidden" name="action" value="toggleVisibility">
                             <input type="hidden" name="courseId" value="<%= course.get("id") %>">
                             <button class="btn btn-sm btn-secondary">
                                 <%= isHidden ? "Unhide" : "Hide" %>
