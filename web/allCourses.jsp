@@ -1,4 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.HashSet" %>
+<%@ page import="java.util.Set" %>
 <%@ page import="com.elearningplatform.util.DBConnection" %>
 <%@ page import="java.sql.ResultSet" %>
 <%@ page import="java.sql.SQLException" %>
@@ -53,18 +57,25 @@
         <!-- Courses Grid -->
         <div class="row course-grid" id="courseGrid">
             <%
+                @SuppressWarnings("unchecked")
+                List<String[]> results = (List<String[]>) request.getAttribute("searchResults");
+                String searchQuery = (String) request.getAttribute("searchQuery");
                 DBConnection db = new DBConnection();
-                try {
-                    db.connect();
-                    ResultSet rs = db.executeQuery("SELECT course_id, course_name, course_price, course_category, course_rating, course_image FROM Course WHERE course_status = 'Active'");
-                    while (rs.next()) {
-                        int courseId = rs.getInt("course_id");
-                        String courseName = rs.getString("course_name");
-                        int coursePrice = rs.getInt("course_price");
-                        String courseCategory = rs.getString("course_category");
-                        int courseRating = rs.getInt("course_rating");
-                        String courseImage = rs.getString("course_image");
-                        session.setAttribute("courseId", rs.getInt("course_id"));
+                ResultSet rs = null;
+                Set<String> displayedCourses = new HashSet<>(); // Track unique course names
+
+                if (results != null && !results.isEmpty()) {
+                    // Display search results, showing each course name only once
+                    for (String[] course : results) {
+                        String courseName = course[1];
+                        if (!displayedCourses.contains(courseName)) {
+                            // Only display the first instance of a course name
+                            displayedCourses.add(courseName);
+                            int courseId = Integer.parseInt(course[0]);
+                            int coursePrice = Integer.parseInt(course[2]);
+                            String courseCategory = course[3];
+                            int courseRating = Integer.parseInt(course[4]);
+                            String courseImage = course[5];
             %>
             <div class="col-md-4 mb-4 course-card" data-category="<%= courseCategory %>" data-price="<%= coursePrice %>" data-rating="<%= courseRating %>">
                 <div class="card h-100 shadow-sm">
@@ -74,20 +85,57 @@
                         <p class="card-text">Category: <%= courseCategory %></p>
                         <p class="card-text">Price: $<%= coursePrice %></p>
                         <p class="card-text">Rating: <%= courseRating %>/5 <span class="text-warning">★</span></p>
-                        <h2>Course ID: <%= session.getAttribute("courseId") %></h2>
-                        <%-- this should send the id of the course to course details page --%>
                         <a href="courseStudent.jsp?courseId=<%= courseId %>" class="btn btn-primary mt-auto">View Details</a>
                     </div>
                 </div>
             </div>
             <%
+                        }
                     }
-                    db.closeResources();
-                } catch (SQLException e) {
-                    out.println("<p class='text-danger'>Error fetching courses: " + e.getMessage() + "</p>");
+                } else {
+                    // Fall back to all courses if no search or no results, showing each course name only once
+                    try {
+                        db.connect();
+                        String sql = "SELECT course_id, course_name, course_price, course_category, course_rating, course_image FROM Course WHERE course_status = 'Active'";
+                        rs = db.executeQuery(sql);
+                        while (rs.next()) {
+                            String courseName = rs.getString("course_name");
+                            if (!displayedCourses.contains(courseName)) {
+                                // Only display the first instance of a course name
+                                displayedCourses.add(courseName);
+                                int courseId = rs.getInt("course_id");
+                                int coursePrice = rs.getInt("course_price");
+                                String courseCategory = rs.getString("course_category");
+                                int courseRating = rs.getInt("course_rating");
+                                String courseImage = rs.getString("course_image");
+            %>
+            <div class="col-md-4 mb-4 course-card" data-category="<%= courseCategory %>" data-price="<%= coursePrice %>" data-rating="<%= courseRating %>">
+                <div class="card h-100 shadow-sm">
+                    <img src="<%= courseImage != null ? courseImage : "https://via.placeholder.com/300x200" %>" class="card-img-top" alt="<%= courseName %>">
+                    <div class="card-body">
+                        <h5 class="card-title"><%= courseName %></h5>
+                        <p class="card-text">Category: <%= courseCategory %></p>
+                        <p class="card-text">Price: $<%= coursePrice %></p>
+                        <p class="card-text">Rating: <%= courseRating %>/5 <span class="text-warning">★</span></p>
+                        <a href="courseStudent.jsp?courseId=<%= courseId %>" class="btn btn-primary mt-auto">View Details</a>
+                    </div>
+                </div>
+            </div>
+            <%
+                            }
+                        }
+                    } catch (SQLException e) {
+                        out.println("<p class='text-danger'>Error fetching courses: " + e.getMessage() + "</p>");
+                    } finally {
+                        if (rs != null) rs.close();
+                        db.closeResources();
+                    }
                 }
             %>
         </div>
+        <% if (searchQuery != null && !searchQuery.trim().isEmpty() && (results == null || results.isEmpty())) { %>
+            <p class="text-center text-warning">No courses found for "<%= searchQuery %>".</p>
+        <% } %>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="navbar.jsp" %> <!-- Pulling in that navbar with the search bar -->
 <!DOCTYPE html>
 <html>
 <head>
