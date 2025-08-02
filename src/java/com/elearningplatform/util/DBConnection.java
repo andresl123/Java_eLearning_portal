@@ -13,7 +13,7 @@ public class DBConnection {
     private static final String DB_URL_WITHOUT_DB = "jdbc:mysql://localhost:3306/";
     private static final String DB_URL = "jdbc:mysql://localhost:3306/" + DB_NAME;
     private static final String DB_USER = "root"; // Update for your MySQL connection
-    private static final String DB_PASSWORD = "sysadmin"; // Update for your MySQL connection
+    private static final String DB_PASSWORD = "Sumit@1221"; // Update for your MySQL connection
 
     private Connection conn;
     private PreparedStatement pstmt;
@@ -25,6 +25,21 @@ public class DBConnection {
     
     public Connection getConn() {
         return conn;
+    }
+    public PreparedStatement getPstmt() {
+        return pstmt;
+    }
+    
+    public ResultSet getRs() {
+        return rs;
+    }
+    
+    public void setPstmt(PreparedStatement pstmt) {
+        this.pstmt = pstmt;
+    }
+    
+    public void setRs(ResultSet rs) {
+        this.rs = rs;
     }
     
     // Connect to the database and create it, if it doesn't exist
@@ -133,6 +148,22 @@ public class DBConnection {
                                                FOREIGN KEY (user_id) REFERENCES User(user_id),
                                                FOREIGN KEY (course_id) REFERENCES Course(course_id),
                                                UNIQUE KEY unique_enrollment (user_id, course_id)
+                                           )
+                                       """);
+            
+            // Section Progress Table
+            stmt.executeUpdate("""
+                                           CREATE TABLE IF NOT EXISTS Section_Progress (
+                                               progress_id INT PRIMARY KEY AUTO_INCREMENT,
+                                               user_id INT,
+                                               course_id INT,
+                                               section_id INT,
+                                               is_completed BOOLEAN DEFAULT FALSE,
+                                               completed_date DATETIME DEFAULT NULL,
+                                               FOREIGN KEY (user_id) REFERENCES User(user_id),
+                                               FOREIGN KEY (course_id) REFERENCES Course(course_id),
+                                               FOREIGN KEY (section_id) REFERENCES Course_details(section_id),
+                                               UNIQUE KEY unique_section_progress (user_id, section_id)
                                            )
                                        """);
         }
@@ -446,6 +477,139 @@ public class DBConnection {
             return rs.getInt(1);
         }
         return 0;
+    }
+    
+    // SECTION PROGRESS METHODS
+    
+    public boolean markSectionComplete(int userId, int courseId, int sectionId) throws SQLException {
+        connect();
+        
+        // First, check if progress record exists
+        String checkQuery = "SELECT * FROM Section_Progress WHERE user_id = ? AND section_id = ?";
+        pstmt = conn.prepareStatement(checkQuery);
+        pstmt.setInt(1, userId);
+        pstmt.setInt(2, sectionId);
+        rs = pstmt.executeQuery();
+        
+        if (rs.next()) {
+            // Update existing record
+            String updateQuery = "UPDATE Section_Progress SET is_completed = TRUE, completed_date = CURRENT_TIMESTAMP WHERE user_id = ? AND section_id = ?";
+            pstmt = conn.prepareStatement(updateQuery);
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, sectionId);
+        } else {
+            // Insert new record
+            String insertQuery = "INSERT INTO Section_Progress (user_id, course_id, section_id, is_completed, completed_date) VALUES (?, ?, ?, TRUE, CURRENT_TIMESTAMP)";
+            pstmt = conn.prepareStatement(insertQuery);
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, courseId);
+            pstmt.setInt(3, sectionId);
+        }
+        
+        int result = pstmt.executeUpdate();
+        
+        // Update overall course progress
+        updateCourseProgressFromSections(userId, courseId);
+        
+        return result > 0;
+    }
+    
+    public boolean markSectionIncomplete(int userId, int sectionId) throws SQLException {
+        connect();
+        String query = "UPDATE Section_Progress SET is_completed = FALSE, completed_date = NULL WHERE user_id = ? AND section_id = ?";
+        pstmt = conn.prepareStatement(query);
+        pstmt.setInt(1, userId);
+        pstmt.setInt(2, sectionId);
+        
+        int result = pstmt.executeUpdate();
+        
+        // Update overall course progress
+        if (result > 0) {
+            // Get course_id from section_progress
+            String courseQuery = "SELECT course_id FROM Section_Progress WHERE user_id = ? AND section_id = ?";
+            pstmt = conn.prepareStatement(courseQuery);
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, sectionId);
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                int courseId = rs.getInt("course_id");
+                updateCourseProgressFromSections(userId, courseId);
+            }
+        }
+        
+        return result > 0;
+    }
+    
+    public boolean isSectionCompleted(int userId, int sectionId) throws SQLException {
+        connect();
+        String query = "SELECT is_completed FROM Section_Progress WHERE user_id = ? AND section_id = ?";
+        pstmt = conn.prepareStatement(query);
+        pstmt.setInt(1, userId);
+        pstmt.setInt(2, sectionId);
+        rs = pstmt.executeQuery();
+        
+        if (rs.next()) {
+            return rs.getBoolean("is_completed");
+        }
+        return false;
+    }
+    
+    public ResultSet getSectionProgressForCourse(int userId, int courseId) throws SQLException {
+        connect();
+        String query = "SELECT sp.section_id, sp.is_completed, sp.completed_date, cd.section_title " +
+                      "FROM Section_Progress sp " +
+                      "JOIN Course_details cd ON sp.section_id = cd.section_id " +
+                      "WHERE sp.user_id = ? AND sp.course_id = ? " +
+                      "ORDER BY cd.section_id";
+        pstmt = conn.prepareStatement(query);
+        pstmt.setInt(1, userId);
+        pstmt.setInt(2, courseId);
+        return pstmt.executeQuery();
+    }
+    
+    private void updateCourseProgressFromSections(int userId, int courseId) throws SQLException {
+        // Get total sections for the course
+        String totalQuery = "SELECT COUNT(*) as total FROM Course_details WHERE course_id = ?";
+        pstmt = conn.prepareStatement(totalQuery);
+        pstmt.setInt(1, courseId);
+        rs = pstmt.executeQuery();
+        int totalSections = 0;
+        if (rs.next()) {
+            totalSections = rs.getInt("total");
+        }
+        
+        if (totalSections == 0) return;
+        
+        // Get completed sections
+        String completedQuery = "SELECT COUNT(*) as completed FROM Section_Progress WHERE user_id = ? AND course_id = ? AND is_completed = TRUE";
+        pstmt = conn.prepareStatement(completedQuery);
+        pstmt.setInt(1, userId);
+        pstmt.setInt(2, courseId);
+        rs = pstmt.executeQuery();
+        int completedSections = 0;
+        if (rs.next()) {
+            completedSections = rs.getInt("completed");
+        }
+        
+        // Calculate progress percentage
+        int progressPercentage = Math.round((float) completedSections / totalSections * 100);
+        
+        // Update enrollment progress
+        String updateQuery = "UPDATE Enrollment SET progress_percentage = ?, last_accessed = CURRENT_TIMESTAMP WHERE user_id = ? AND course_id = ?";
+        pstmt = conn.prepareStatement(updateQuery);
+        pstmt.setInt(1, progressPercentage);
+        pstmt.setInt(2, userId);
+        pstmt.setInt(3, courseId);
+        pstmt.executeUpdate();
+        
+        // Update completion status
+        String status = (progressPercentage >= 100) ? "Completed" : "In Progress";
+        String statusQuery = "UPDATE Enrollment SET completion_status = ? WHERE user_id = ? AND course_id = ?";
+        pstmt = conn.prepareStatement(statusQuery);
+        pstmt.setString(1, status);
+        pstmt.setInt(2, userId);
+        pstmt.setInt(3, courseId);
+        pstmt.executeUpdate();
     }
 
 	
