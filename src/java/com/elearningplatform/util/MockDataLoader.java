@@ -199,5 +199,58 @@ public class MockDataLoader {
         System.out.println("✅ Mock enrollment data inserted: 2 Students enrolled in 6 courses total");
         System.out.println("   - Ed Suelila (C0934658@mylambton.ca): 3 courses enrolled");
         System.out.println("   - Andre Lopes (C0948798@mylambton.ca): 3 courses enrolled");
+        
+        // Insert some mock section progress data
+        insertMockSectionProgress();
+    }
+    
+    public void insertMockSectionProgress() throws SQLException {
+        // Get student IDs
+        String query = "SELECT user_id FROM User WHERE user_email = ?";
+        var pstmt = db.getConn().prepareStatement(query);
+        
+        // Get Ed's ID
+        pstmt.setString(1, "C0934658@mylambton.ca");
+        var rs = pstmt.executeQuery();
+        int edStudentId = 0;
+        if (rs.next()) {
+            edStudentId = rs.getInt("user_id");
+        }
+        
+        // Get Andre's ID
+        pstmt.setString(1, "C0948798@mylambton.ca");
+        rs = pstmt.executeQuery();
+        int andreStudentId = 0;
+        if (rs.next()) {
+            andreStudentId = rs.getInt("user_id");
+        }
+        rs.close();
+        pstmt.close();
+        
+        // Insert section progress for Ed (Java Programming - 75% complete = 3 out of 4 sections)
+        for (int sectionId = 1; sectionId <= 3; sectionId++) {
+            db.markSectionComplete(edStudentId, 1, sectionId);
+        }
+        
+        // Insert section progress for Ed (Full Stack Web Development - 100% complete = all 4 sections)
+        for (int sectionId = 5; sectionId <= 8; sectionId++) {
+            db.markSectionComplete(edStudentId, 2, sectionId);
+        }
+        
+        // Insert section progress for Ed (AWS Cloud Computing - 25% complete = 1 out of 4 sections)
+        db.markSectionComplete(edStudentId, 4, 13); // Only first section completed
+        
+        // Insert section progress for Andre (Java Programming - 100% complete = all 4 sections)
+        for (int sectionId = 1; sectionId <= 4; sectionId++) {
+            db.markSectionComplete(andreStudentId, 1, sectionId);
+        }
+        
+        // Insert section progress for Andre (Data Structures - 50% complete = 2 out of 4 sections)
+        db.markSectionComplete(andreStudentId, 3, 9); // Arrays and Linked Lists
+        db.markSectionComplete(andreStudentId, 3, 10); // Stacks and Queues
+        
+        System.out.println("✅ Mock section progress data inserted");
+        System.out.println("   - Ed: 8 sections completed across 3 courses");
+        System.out.println("   - Andre: 6 sections completed across 2 courses");
     }
 } 

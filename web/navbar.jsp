@@ -33,6 +33,8 @@
                         out.println("<li class='nav-item'><span class='nav-link text-dark'>Hi, " + (username != null ? username : "User") + "</span></li>"); // Changed to text-dark
                         if (navRole.equals(1)) {
                             out.println("<li class='nav-item'><a class='nav-link btn btn-primary' href='adminPanel.jsp'>Admin Panel</a></li>");
+                        } else if (navRole.equals(2)) {
+                            out.println("<li class='nav-item'><a class='nav-link btn btn-primary' href='studentDashboard.jsp'>My Dashboard</a></li>");
                         } else if (navRole.equals(3)) {
                             out.println("<li class='nav-item'><a class='nav-link btn btn-primary' href='tutorDashboard.jsp'>Tutor Panel</a></li>");
                         }
@@ -45,4 +47,4 @@
             </ul>
         </div>
     </div>
-</nav>
+</nav> 

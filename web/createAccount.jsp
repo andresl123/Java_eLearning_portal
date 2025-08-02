@@ -5,7 +5,7 @@
 <head>
     <title>Create Account</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-      <!-- Our custom styles to make it pop -->
+    <!-- Our custom styles to make it pop -->
     <link rel="stylesheet" href="css/styles.css">
     <style>
         /* Body background set to pure white */
@@ -139,21 +139,22 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
    <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Get the error message passed from the servlet as a request attribute
-            // This is for scenarios where the servlet *forwards* to the JSP (e.g., user exists)
             const errorMessage = "<%= request.getAttribute("error") != null ? request.getAttribute("error") : "" %>";
+            const successMessage = "<%= request.getAttribute("message") != null ? request.getAttribute("message") : "" %>";
 
             const toastElement = document.getElementById('liveToast');
             const toastBody = document.getElementById('toastBody');
             const toast = new bootstrap.Toast(toastElement);
 
             if (errorMessage) {
-                // Set the toast body text to the error message
                 toastBody.textContent = errorMessage;
-                // Add Bootstrap classes for a red, white-text error toast
-                toastElement.classList.remove('bg-success'); // Ensure success styling is removed
+                toastElement.classList.remove('bg-success');
                 toastElement.classList.add('bg-danger', 'text-white');
-                // Show the toast
+                toast.show();
+            } else if (successMessage) {
+                toastBody.textContent = successMessage;
+                toastElement.classList.remove('bg-danger', 'text-white');
+                toastElement.classList.add('bg-success', 'text-white');
                 toast.show();
             }
         });
