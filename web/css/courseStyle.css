@@ -1,74 +1,92 @@
-/*
-Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
-Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
-*/
-/* 
-    Created on : Jun 25, 2025, 3:59:07 PM
-    Author     : andre
-*/
-body {
-    background-color: #f8f9fa;
-    font-family: Arial, sans-serif;
-}
-
-/* Container styling */
+/* Container */
 .container {
-    max-width: 800px;
-    margin: 50px auto;
+  max-width: 700px;
+/*  background: linear-gradient(to bottom right, #6f42c1, #CEFFCE);*/
+background: linear-gradient(90deg, #0056b3 0%, #0099a8 100%);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  border-radius: 16px;
+  padding: 20px;
 }
 
-/* Form styling */
+/* Heading */
+h2 {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+/* Form */
 form {
-    background-color: #6f42c1; /* Purple */
-    color: white;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #f9fbfd;
+  border: none;
+  border-radius: 12px;
 }
 
 /* Labels */
-.form-label {
-    font-weight: bold;
-    color: white;
+label.form-label {
+  font-weight: 600;
+  color: #34495e;
 }
 
-/* Inputs */
-.form-control {
-    border: 2px solid #ffc107; /* Yellow border */
+/* Inputs and Textareas */
+input.form-control,
+textarea.form-control {
+  border: 1px solid #dfe6e9;
+  border-radius: 8px;
+  padding: 10px 14px;
+  background-color: #ffffff;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  color: #2d3436;
 }
 
-/* Buttons */
-.btn-primary,
-.btn-secondary {
-    background-color: #ffc107; /* Yellow */
-    color: black;
-    border: none;
-    font-weight: bold;
+input.form-control:focus,
+textarea.form-control:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.15);
+  outline: none;
 }
 
-.btn-primary:hover,
-.btn-secondary:hover {
-    opacity: 0.85;
+/* Radio Buttons */
+input[type="radio"] {
+  accent-color: #27ae60;
+  margin-left: 10px;
+  margin-right: 5px;
 }
 
-/* Table styling */
-.table thead {
-    background-color: #6f42c1; /* Purple */
-    color: white;
+/* Button */
+.btn-primary {
+  background-color: #2980b9;
+  border-color: #2980b9;
+  font-weight: 600;
+  padding: 10px 24px;
+  border-radius: 8px;
+  transition: background-color 0.3s;
 }
 
-.table td,
-.table th {
-    vertical-align: middle;
+.btn-primary:hover {
+  background-color: #1f618d;
+  border-color: #1f618d;
 }
 
-/* Alert messages */
-.alert {
-    font-weight: bold;
+/* Alert box */
+.alert-info {
+  background-color: #eafaf1;
+  color: #2ecc71;
+  border: 1px solid #b2f0cf;
+  border-radius: 8px;
+  font-weight: 500;
 }
 
-/* Title headers */
-h2 {
-    text-align: center;
-    margin-bottom: 25px;
+/* Helper text */
+.form-text {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+}
+
+/* Spacing */
+.mb-3 {
+  margin-bottom: 1.5rem !important;
+}
+
+.mt-5 {
+  margin-top: 3rem !important;
 }

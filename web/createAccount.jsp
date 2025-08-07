@@ -75,6 +75,10 @@
             background-color: #4b2d86; /* Even darker on hover */
             border-color: #4b2d86;
         }
+        .customise{
+                   background: linear-gradient(90deg, #007bff 0%, #00c4cc 100%);
+                   color: #fff;
+                  }
         
         #account-btn{
             border-radius: 28px;
@@ -123,7 +127,7 @@
                     <label for="tutorDesc" class="form-label">Tutor Description</label>
                     <input type="text" class="form-control" name="tutorDesc">
                 </div>
-                <button type="submit" class="btn btn-primary search-btn" id="account-btn">Create Account</button>
+                <button type="submit" class="btn btn-primary customise" id="account-btn">Create Account</button>
             </form>
     </div>
     <div class="toast-container position-fixed top-0 end-0 p-3">

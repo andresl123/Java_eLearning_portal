@@ -8,6 +8,7 @@
         return;
     }
 %>
+<%@ include file="navbar.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,9 +16,9 @@
     <title>Create Course</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/courseStyle.css">
+     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <%@ include file="navbar.jsp" %>
     <div class="container mt-5">
         <h2 class="mb-4 text-center">Create New Course</h2>
         <!-- Course creation form: tutors can fill this out to add a new course -->

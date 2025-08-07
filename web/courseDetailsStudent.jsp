@@ -1,5 +1,7 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.*, com.elearningplatform.util.DBConnection, java.sql.*" %>
+<%@ include file="navbar.jsp" %>
 <%
     Integer courseId = null;
     Integer userId = (Integer) session.getAttribute("userId");
@@ -81,11 +83,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="css/styles.css">
     <!-- Custom CSS -->
+    
     <link rel="stylesheet" href="css/courseDetails.css">
 </head>
 <body>
-<%@ include file="navbar.jsp" %>
 
 <div class="course-details-container">
     <% if (!courseInfo.isEmpty()) { %>
