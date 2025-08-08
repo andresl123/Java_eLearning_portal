@@ -99,7 +99,7 @@ public class MockDataLoader {
             
             {9, 3, "Data Structures and Algorithms", 129, "Active", true,
              "Deep dive into essential data structures and algorithms. Learn to write efficient and optimized code.",
-             "Computer Science", 5, "https://learncraftacademy.com/wp-content/uploads/2024/12/https___dev-to-uploads.s3.amazonaws.com_uploads_articles_6gsw2jl53ye6aabdndqg.png"},
+             "Computer Science", 5, "https://media.geeksforgeeks.org/wp-content/uploads/20221114175057/10BestDataStructuresandAlgorithmsCourses.png"},
             
             {10, 3, "Cloud Computing with AWS", 179, "Active", true,
              "Learn cloud computing fundamentals and AWS services. Deploy and manage applications in the cloud.",
