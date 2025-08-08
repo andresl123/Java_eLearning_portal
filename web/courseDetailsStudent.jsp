@@ -204,19 +204,48 @@
                             <div class="accordion-body">
                                 <p class="text-muted mb-3"><%= section.get("sectionDesc") %></p>
                                 
-                                <% if (section.get("sectionVideoUrl") != null && !((String) section.get("sectionVideoUrl")).trim().isEmpty()) { %>
-                                    <div class="ratio ratio-16x9 mb-3">
-                                        <video controls>
-                                            <source src="<%= section.get("sectionVideoUrl") %>" type="video/mp4">
-                                            Your browser does not support the video tag.
-                                        </video>
-                                    </div>
-                                <% } else { %>
-                                    <div class="alert alert-info">
-                                        <i class="bi bi-info-circle me-2"></i>
-                                        Video content will be available soon.
-                                    </div>
-                                <% } %>
+                                <%
+                                    String videoUrl = (String) section.get("sectionVideoUrl");
+                                    if (videoUrl != null && !videoUrl.trim().isEmpty()) {
+                                        String embedUrl = null;
+
+                                        // Check if it's a YouTube long URL
+                                        if (videoUrl.contains("youtube.com/watch?v=")) {
+                                            String videoId = videoUrl.substring(videoUrl.indexOf("v=") + 2);
+                                            int ampIndex = videoId.indexOf("&");
+                                            if (ampIndex != -1) {
+                                                videoId = videoId.substring(0, ampIndex);
+                                            }
+                                            embedUrl = "https://www.youtube.com/embed/" + videoId;
+
+                                            // Check if it's a YouTube short URL
+                                        } else if (videoUrl.contains("youtu.be/")) {
+                                            String videoId = videoUrl.substring(videoUrl.lastIndexOf("/") + 1);
+                                            embedUrl = "https://www.youtube.com/embed/" + videoId;
+                                        }
+                                %>
+                                <div class="ratio ratio-16x9 mb-3">
+                                    <% if (embedUrl != null) {%>
+                                    <iframe src="<%= embedUrl%>" 
+                                            title="YouTube video player" frameborder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                            allowfullscreen>
+                                    </iframe>
+                                    <% } else {%>
+                                    <video controls>
+                                        <source src="<%= videoUrl%>" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                    <% } %>
+                                </div>
+                                <%
+                                } else {
+                                %>
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    Video content will be available soon.
+                                </div>
+                                <% }%>
                                 
                                 <div class="d-flex justify-content-between align-items-center">
                                     <small class="text-muted">Section <%= i + 1 %> of <%= sections.size() %></small>
