@@ -54,6 +54,6 @@ public class CreateAccountServlet extends HttpServlet {
             request.setAttribute("error", "Error occurred: " + e.getMessage());
         }
 
-        request.getRequestDispatcher("createAccount.jsp").forward(request, response);
+        request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 }
