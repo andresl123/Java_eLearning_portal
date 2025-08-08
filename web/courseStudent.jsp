@@ -9,6 +9,7 @@
     <title>Course Details for Students</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/courseDetails.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <%@ include file="navbar.jsp" %>
@@ -108,16 +109,38 @@
                 <div id="collapse<%= sectionIndex %>" class="accordion-collapse collapse" aria-labelledby="heading<%= sectionIndex %>" data-bs-parent="#sectionsAccordion">
                     <div class="accordion-body">
                         <p><%= sectionDesc %></p>
-                        <% if (sectionVideoUrl != null && !sectionVideoUrl.trim().isEmpty()) { %>
-                            <div class="video-container mt-3">
-                                <video controls width="100%" height="100%">
-                                    <source src="<%= sectionVideoUrl %>" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                            </div>
-                        <% } else { %>
-                            <p class="text-muted">No video available for this section.</p>
+                        <% if (sectionVideoUrl != null && !sectionVideoUrl.trim().isEmpty()) {
+                                if (sectionVideoUrl.contains("youtube.com/watch?v=")) {
+                                    String videoId = sectionVideoUrl.substring(sectionVideoUrl.indexOf("v=") + 2);
+                                    // Handle possible extra parameters like &t=5s
+                                    int ampIndex = videoId.indexOf("&");
+                                    if (ampIndex != -1) {
+                                        videoId = videoId.substring(0, ampIndex);
+                                    }
+                                    String embedUrl = "https://www.youtube.com/embed/" + videoId;
+                        %>
+                        <div class="video-container mt-3">
+                            <iframe width="100%" height="700" src="<%= embedUrl%>" 
+                                    frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                    allowfullscreen>
+                            </iframe>
+                        </div>
+                        <%
+                        } else {
+                        %>
+                        <div class="video-container mt-3">
+                            <video controls width="100%">
+                                <source src="<%= sectionVideoUrl%>" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                        <%
+                            }
+                        } else {
+                        %>
+                        <p class="text-muted">No video available for this section.</p>
                         <% } %>
+
                     </div>
                 </div>
             </div>
